@@ -39,11 +39,10 @@ class HomeViewController: UIViewController, UITextFieldDelegate, MBProgressHUDDe
         if url.isEmpty {
             return
         }
-        
-        if let webPageViewController = self.storyboard?.instantiateViewController(withIdentifier: "WebPageVC") as? WebPageVC {
-            webPageViewController.modalPresentationStyle = .fullScreen
-            webPageViewController.url = url
-            DispatchQueue.main.async {
+        DispatchQueue.main.async {
+            if let webPageViewController = self.storyboard?.instantiateViewController(withIdentifier: "WebPageVC") as? WebPageVC {
+                webPageViewController.modalPresentationStyle = .fullScreen
+                webPageViewController.url = url
                 self.present(webPageViewController, animated: true, completion: nil)
             }
         }

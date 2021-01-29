@@ -22,8 +22,10 @@ class WMGlobal: NSObject {
     
     // Save UserData
     static func saveUserData(userData: [String: Any?]) {
+        print("saveUserData: \(String(describing: userData))") // DEBUG
         let userDefault = UserDefaults(suiteName: "group.com.mobile.waybackmachine")
-        let encodedObject = NSKeyedArchiver.archivedData(withRootObject: userData)
+        let encodedObject = try? NSKeyedArchiver.archivedData(withRootObject: userData, requiringSecureCoding: false)
+        //let encodedObject = try? JSONEncoder().encode(userData) // doesn't work with Any types
         userDefault?.set(encodedObject, forKey: "UserData")
         userDefault?.synchronize()
     }
@@ -32,11 +34,22 @@ class WMGlobal: NSObject {
     static func getUserData() -> [String: Any?]? {
         let userDefault = UserDefaults(suiteName: "group.com.mobile.waybackmachine")
         if let encodedData = userDefault?.data(forKey: "UserData") {
-            let obj = NSKeyedUnarchiver.unarchiveObject(with: encodedData)
-            return obj as? [String: Any?]
-        } else {
-            return nil
+            do {
+                let obj = try NSKeyedUnarchiver.unarchivedObject(ofClasses: [NSObject.self], from: encodedData) as? [String: Any?]
+
+                // I tried using NSDictionary.self, but that gave this error:
+                //  value for key 'NS.objects' was of unexpected class 'NSHTTPCookie
+                // NSObject.self worked, but might not in the future? This was in the log:
+                //  NSSecureCoding allowed classes list contains [NSObject class], which bypasses security by allowing any Objective-C class to be implicitly decoded. Consider reducing the scope of allowed classes during decoding by listing only the classes you expect to decode, or a more specific base class than NSObject. This will be disallowed in the future.
+                // Also tried this, but it doesn't work with Any types:
+                //let obj = try JSONDecoder().decode(Dictionary<String, Any?>.self, from: encodedData)
+                print("getUserData: \(String(describing: obj))") // DEBUG
+                return obj
+            } catch {
+                print("getUserData error: \(error)") // DEBUG
+            }
         }
+        return nil
     }
     
     static func isLoggedIn() -> Bool {
