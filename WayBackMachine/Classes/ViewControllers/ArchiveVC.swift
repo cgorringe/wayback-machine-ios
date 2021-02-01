@@ -213,8 +213,9 @@ class ArchiveVC: UIViewController, UIImagePickerControllerDelegate, UIPopoverCon
             MBProgressHUD.showAdded(to: self.view, animated: true)
             
             WMAPIManager.sharedManager.login(email: email, password: password) { (data) in
-                NSLog("*** _onOK MARK2") // DEBUG
+                NSLog("*** _onOK MARK2 data: \(String(describing: data))") // DEBUG
                 guard let data = data, let success = data["success"] as? Bool, success == true else {
+                    // FIXME: goes here now even though getUserData grabbed the email & password correctly
                     NSLog("*** _onOK MARK3") // DEBUG
                     WMGlobal.showAlert(title: "", message: "You need to login through Wayback Machine app.", target: self)
                     MBProgressHUD.hide(for: self.view, animated: true)
