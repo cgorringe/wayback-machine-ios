@@ -78,8 +78,11 @@ class HomeViewController: UIViewController, UITextFieldDelegate, MBProgressHUDDe
                         guard let loggedInSig = cookieData["logged-in-sig"] as? HTTPCookie else { return }
                         guard let loggedInUser = cookieData["logged-in-user"] as? HTTPCookie else { return }
                         var tmpData = userData
-                        tmpData["logged-in-sig"] = loggedInSig
-                        tmpData["logged-in-user"] = loggedInUser
+                        // can't save HTTPCookie in userData directly
+                        tmpData["logged-in-sig"] = loggedInSig.properties
+                        tmpData["logged-in-user"] = loggedInUser.properties
+                        //let loggedInCookies = HTTPCookie.requestHeaderFields(with: [loggedInSig, loggedInUser]) // REMOVE
+                        //tmpData["logged-in-cookies"] = loggedInCookies // REMOVE
                         WMGlobal.saveUserData(userData: tmpData)
                                         
                         WMAPIManager

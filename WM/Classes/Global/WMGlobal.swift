@@ -22,19 +22,29 @@ class WMGlobal: NSObject {
     
     // Save UserData
     static func saveUserData(userData: [String: Any?]) {
-        print("saveUserData: \(String(describing: userData))") // DEBUG
+        NSLog("*** BEGIN saveUserData(): \(String(describing: userData))") // DEBUG
         let userDefault = UserDefaults(suiteName: "group.com.mobile.waybackmachine")
-        let encodedObject = try? NSKeyedArchiver.archivedData(withRootObject: userData, requiringSecureCoding: false)
-        //let encodedObject = try? JSONEncoder().encode(userData) // doesn't work with Any types
-        userDefault?.set(encodedObject, forKey: "UserData")
-        userDefault?.synchronize()
+        do {
+            NSLog("*** saveUserData MARK1") // DEBUG
+            let encodedObject = try NSKeyedArchiver.archivedData(withRootObject: userData, requiringSecureCoding: true) // false
+            NSLog("*** saveUserData MARK2") // DEBUG
+            //let encodedObject = try? JSONEncoder().encode(userData) // doesn't work with Any types
+            userDefault?.set(encodedObject, forKey: "UserData")
+            userDefault?.synchronize()
+            NSLog("*** saveUserData MARK3") // DEBUG
+        } catch {
+            NSLog("*** saveUserData ERROR: \(error)") // DEBUG
+        }
     }
     
-    //Get UserData
+    // Get UserData
     static func getUserData() -> [String: Any?]? {
+        NSLog("*** BEGIN getUserData()") // DEBUG
         let userDefault = UserDefaults(suiteName: "group.com.mobile.waybackmachine")
+        NSLog("*** getUserData MARK1") // DEBUG
         if let encodedData = userDefault?.data(forKey: "UserData") {
             do {
+                NSLog("*** getUserData MARK2") // DEBUG
                 let obj = try NSKeyedUnarchiver.unarchivedObject(ofClasses: [NSObject.self], from: encodedData) as? [String: Any?]
 
                 // I tried using NSDictionary.self, but that gave this error:
@@ -43,12 +53,13 @@ class WMGlobal: NSObject {
                 //  NSSecureCoding allowed classes list contains [NSObject class], which bypasses security by allowing any Objective-C class to be implicitly decoded. Consider reducing the scope of allowed classes during decoding by listing only the classes you expect to decode, or a more specific base class than NSObject. This will be disallowed in the future.
                 // Also tried this, but it doesn't work with Any types:
                 //let obj = try JSONDecoder().decode(Dictionary<String, Any?>.self, from: encodedData)
-                print("getUserData: \(String(describing: obj))") // DEBUG
+                NSLog("*** getUserData returns: \(String(describing: obj))") // DEBUG
                 return obj
             } catch {
-                print("getUserData error: \(error)") // DEBUG
+                NSLog("*** getUserData ERROR: \(error)") // DEBUG
             }
         }
+        NSLog("*** getUserData return nil") // DEBUG
         return nil
     }
     
