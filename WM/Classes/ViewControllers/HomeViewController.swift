@@ -81,8 +81,6 @@ class HomeViewController: UIViewController, UITextFieldDelegate, MBProgressHUDDe
                         // can't save HTTPCookie in userData directly
                         tmpData["logged-in-sig"] = loggedInSig.properties
                         tmpData["logged-in-user"] = loggedInUser.properties
-                        //let loggedInCookies = HTTPCookie.requestHeaderFields(with: [loggedInSig, loggedInUser]) // REMOVE
-                        //tmpData["logged-in-cookies"] = loggedInCookies // REMOVE
                         WMGlobal.saveUserData(userData: tmpData)
                                         
                         WMAPIManager

@@ -68,7 +68,6 @@ class LoginVC: WMBaseVC, UITextFieldDelegate {
                                    let values = data2["values"] as? [String: Any],
                                    let screenname = values["screenname"] as? String
                                 {
-                                    //let loggedInCookies = HTTPCookie.requestHeaderFields(with: [loggedInSig, loggedInUser]) // REMOVE
                                     WMGlobal.saveUserData(userData: [
                                         "email"             : email,
                                         "password"          : password,
@@ -76,7 +75,6 @@ class LoginVC: WMBaseVC, UITextFieldDelegate {
                                         "logged-in"         : true,
                                         "logged-in-user"    : loggedInUser.properties,
                                         "logged-in-sig"     : loggedInSig.properties,
-                                        //"logged-in-cookies" : loggedInCookies, // REMOVE
                                         "s3accesskey"       : key["s3accesskey"],
                                         "s3secretkey"       : key["s3secretkey"],
                                         "add-to-my-web-archive" : self.btnCheck.isSelected

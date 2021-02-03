@@ -22,16 +22,11 @@ class WMGlobal: NSObject {
     
     // Save UserData
     static func saveUserData(userData: [String: Any?]) {
-        NSLog("*** BEGIN saveUserData(): \(String(describing: userData))") // DEBUG
         let userDefault = UserDefaults(suiteName: "group.com.mobile.waybackmachine")
         do {
-            NSLog("*** saveUserData MARK1") // DEBUG
             let encodedObject = try NSKeyedArchiver.archivedData(withRootObject: userData, requiringSecureCoding: true)
-            NSLog("*** saveUserData MARK2") // DEBUG
-            //let encodedObject = try? JSONEncoder().encode(userData) // doesn't work with Any types
             userDefault?.set(encodedObject, forKey: "UserData")
             userDefault?.synchronize()
-            NSLog("*** saveUserData MARK3") // DEBUG
         } catch {
             NSLog("*** saveUserData ERROR: \(error)") // DEBUG
         }
@@ -39,27 +34,15 @@ class WMGlobal: NSObject {
     
     // Get UserData
     static func getUserData() -> [String: Any?]? {
-        NSLog("*** BEGIN getUserData()") // DEBUG
         let userDefault = UserDefaults(suiteName: "group.com.mobile.waybackmachine")
-        NSLog("*** getUserData MARK1") // DEBUG
         if let encodedData = userDefault?.data(forKey: "UserData") {
             do {
-                NSLog("*** getUserData MARK2") // DEBUG
                 let obj = try NSKeyedUnarchiver.unarchivedObject(ofClasses: [NSDictionary.self, NSDate.self, NSNull.self], from: encodedData) as? [String: Any?]
-
-                // I tried using NSDictionary.self, but that gave this error:
-                //  value for key 'NS.objects' was of unexpected class 'NSHTTPCookie
-                // NSObject.self worked, but might not in the future? This was in the log:
-                //  NSSecureCoding allowed classes list contains [NSObject class], which bypasses security by allowing any Objective-C class to be implicitly decoded. Consider reducing the scope of allowed classes during decoding by listing only the classes you expect to decode, or a more specific base class than NSObject. This will be disallowed in the future.
-                // Also tried this, but it doesn't work with Any types:
-                //let obj = try JSONDecoder().decode(Dictionary<String, Any?>.self, from: encodedData)
-                NSLog("*** getUserData returns: \(String(describing: obj))") // DEBUG
                 return obj
             } catch {
                 NSLog("*** getUserData ERROR: \(error)") // DEBUG
             }
         }
-        NSLog("*** getUserData return nil") // DEBUG
         return nil
     }
     
