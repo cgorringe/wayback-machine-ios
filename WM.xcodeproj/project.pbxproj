@@ -1162,13 +1162,13 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 84;
+				CURRENT_PROJECT_VERSION = 85;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = ZSFX78H3ZT;
 				INFOPLIST_FILE = WM/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 2.9.3;
+				MARKETING_VERSION = 2.9.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mobile.waybackmachine;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1188,13 +1188,13 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 84;
+				CURRENT_PROJECT_VERSION = 85;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = ZSFX78H3ZT;
 				INFOPLIST_FILE = WM/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 2.9.3;
+				MARKETING_VERSION = 2.9.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mobile.waybackmachine;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1211,7 +1211,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 84;
+				CURRENT_PROJECT_VERSION = 85;
 				DEVELOPMENT_TEAM = ZSFX78H3ZT;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"COCOAPODS=1",
@@ -1220,7 +1220,7 @@
 				INFOPLIST_FILE = WayBackMachine/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				MARKETING_VERSION = 2.9.3;
+				MARKETING_VERSION = 2.9.4;
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" -DEXTENSION";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mobile.waybackmachine.extension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1239,7 +1239,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 84;
+				CURRENT_PROJECT_VERSION = 85;
 				DEVELOPMENT_TEAM = ZSFX78H3ZT;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
@@ -1248,7 +1248,7 @@
 				INFOPLIST_FILE = WayBackMachine/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				MARKETING_VERSION = 2.9.3;
+				MARKETING_VERSION = 2.9.4;
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" -DEXTENSION";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mobile.waybackmachine.extension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
