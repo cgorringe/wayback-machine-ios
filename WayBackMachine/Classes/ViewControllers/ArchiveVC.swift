@@ -200,100 +200,43 @@ class ArchiveVC: UIViewController, UIImagePickerControllerDelegate, UIPopoverCon
     
     //- MARK: Actions
     @IBAction func _onOK(_ sender: Any) {
-        NSLog("*** BEGIN _onOK()") // DEBUG
         let userData = WMGlobal.getUserData()
-        NSLog("*** _onOK userData: \(String(describing: userData))") // DEBUG
-        // userData is nil! (see in Console app)
         if let userData = userData,
-        //if let userData = WMGlobal.getUserData(),
-            let email = userData["email"] as? String,
-            let password = userData["password"] as? String {
-            
-            NSLog("*** _onOK MARK1") // DEBUG
+           let userProps = userData["logged-in-user"] as? [HTTPCookiePropertyKey : Any],
+           let sigProps = userData["logged-in-sig"] as? [HTTPCookiePropertyKey : Any],
+           let loggedInUser = HTTPCookie.init(properties: userProps),
+           let loggedInSig = HTTPCookie.init(properties: sigProps)
+        {
             MBProgressHUD.showAdded(to: self.view, animated: true)
-            
-            WMAPIManager.sharedManager.login(email: email, password: password) { (data) in
-                NSLog("*** _onOK MARK2 data: \(String(describing: data))") // DEBUG
-                guard let data = data, let success = data["success"] as? Bool, success == true else {
-                    // FIXME: goes here now even though getUserData grabbed the email & password correctly
-                    NSLog("*** _onOK MARK3") // DEBUG
-                    WMGlobal.showAlert(title: "", message: "You need to login through Wayback Machine app.", target: self)
+            WMAPIManager.sharedManager.checkURLBlocked(url: self.urlTextField.text!, completion: { (isBlocked) in
+                if isBlocked {
                     MBProgressHUD.hide(for: self.view, animated: true)
-                    return
-                }
-                NSLog("*** _onOK MARK4") // DEBUG
-
-                WMAPIManager
-                    .sharedManager
-                    .getCookieData(email: email,
-                                   password: password,
-                                   completion: { (cookieData) in
-
-                    NSLog("*** _onOK MARK5") // DEBUG
-                    guard let loggedInSig = cookieData["logged-in-sig"] as? HTTPCookie else { return }
-                    NSLog("*** _onOK MARK6") // DEBUG
-                    guard let loggedInUser = cookieData["logged-in-user"] as? HTTPCookie else { return }
-                    NSLog("*** _onOK MARK7") // DEBUG
-                    var tmpData = userData
-                    tmpData["logged-in-sig"] = loggedInSig.properties
-                    tmpData["logged-in-user"] = loggedInUser.properties
-                    WMGlobal.saveUserData(userData: tmpData)
-                    NSLog("*** _onOK MARK8") // DEBUG
-
-                    WMAPIManager.sharedManager.checkURLBlocked(url: self.urlTextField.text!, completion: { (isBlocked) in
-                        
-                        NSLog("*** _onOK MARK9") // DEBUG
-                        if isBlocked {
-                            WMGlobal.showAlert(title: "Error", message: "That site's robots.txt policy requests we not archive it.", target: self)
+                    WMGlobal.showAlert(title: "Error", message: "That site's robots.txt policy requests we not archive it.", target: self)
+                } else {
+                    WMAPIManager.sharedManager.request_capture(url: self.urlTextField.text!, logged_in_user: loggedInUser, logged_in_sig: loggedInSig, completion: { (job_id) in
+                        if job_id == nil {
                             MBProgressHUD.hide(for: self.view, animated: true)
-                            return
-                        }
-                        NSLog("*** _onOK MARK10") // DEBUG
-
-                        if let userData = WMGlobal.getUserData(),
-                           let userProps = userData["logged-in-user"] as? [HTTPCookiePropertyKey : Any],
-                           let sigProps = userData["logged-in-sig"] as? [HTTPCookiePropertyKey : Any],
-                           let loggedInUser = HTTPCookie.init(properties: userProps),
-                           let loggedInSig = HTTPCookie.init(properties: sigProps)
-                        {
-                            NSLog("*** _onOK MARK11") // DEBUG
-                            WMAPIManager.sharedManager.request_capture(url: self.urlTextField.text!, logged_in_user: loggedInUser, logged_in_sig: loggedInSig, completion: { (job_id) in
-                                NSLog("*** _onOK MARK12") // DEBUG
-                                if job_id == nil {
-                                    NSLog("*** _onOK MARK13") // DEBUG
-                                    MBProgressHUD.hide(for: self.view, animated: true)
-                                    return
-                                }
-                                
-                                NSLog("*** _onOK MARK14") // DEBUG
-                                WMAPIManager.sharedManager.request_capture_status(job_id: job_id!, logged_in_user: loggedInUser, logged_in_sig: loggedInSig, completion: { (url, error) in
-                                    NSLog("*** _onOK MARK15") // DEBUG
-                                    if url == nil {
-                                        NSLog("*** _onOK MARK16") // DEBUG
-                                        MBProgressHUD.hide(for: self.view, animated: true)
-                                        WMGlobal.showAlert(title: "Error", message: (error ?? ""), target: self)
-                                    } else {
-                                        NSLog("*** _onOK MARK17") // DEBUG
-                                        MBProgressHUD.hide(for: self.view, animated: true)
-                                        let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-                                        if let shareVC = storyBoard.instantiateViewController(withIdentifier: "ShareVC") as? ShareVC {
-                                            NSLog("*** _onOK MARK18") // DEBUG
-                                            shareVC.modalPresentationStyle = .fullScreen
-                                            shareVC.url = url ?? ""
-                                            DispatchQueue.main.async {
-                                                self.present(shareVC, animated: true, completion: nil)
-                                            }
+                        } else {
+                            WMAPIManager.sharedManager.request_capture_status(job_id: job_id!, logged_in_user: loggedInUser, logged_in_sig: loggedInSig, completion: { (url, error) in
+                                MBProgressHUD.hide(for: self.view, animated: true)
+                                if url == nil {
+                                    WMGlobal.showAlert(title: "Error", message: (error ?? ""), target: self)
+                                } else {
+                                    let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+                                    if let shareVC = storyBoard.instantiateViewController(withIdentifier: "ShareVC") as? ShareVC {
+                                        shareVC.modalPresentationStyle = .fullScreen
+                                        shareVC.url = url ?? ""
+                                        DispatchQueue.main.async {
+                                            self.present(shareVC, animated: true, completion: nil)
                                         }
                                     }
-                                })
+                                }
                             })
                         }
                     })
-                })
-            }
-            NSLog("*** _onOK MARK19") // DEBUG
+                }
+            })
         } else {
-            NSLog("*** _onOK MARK20") // DEBUG
             WMGlobal.showAlert(title: "", message: "You need to login through Wayback Machine app.", target: self)
         }
     }

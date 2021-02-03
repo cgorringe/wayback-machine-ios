@@ -45,7 +45,7 @@ class WMGlobal: NSObject {
         if let encodedData = userDefault?.data(forKey: "UserData") {
             do {
                 NSLog("*** getUserData MARK2") // DEBUG
-                let obj = try NSKeyedUnarchiver.unarchivedObject(ofClasses: [NSDictionary.self, NSDate.self], from: encodedData) as? [String: Any?]
+                let obj = try NSKeyedUnarchiver.unarchivedObject(ofClasses: [NSDictionary.self, NSDate.self, NSNull.self], from: encodedData) as? [String: Any?]
 
                 // I tried using NSDictionary.self, but that gave this error:
                 //  value for key 'NS.objects' was of unexpected class 'NSHTTPCookie
