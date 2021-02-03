@@ -207,12 +207,14 @@ class ArchiveVC: UIViewController, UIImagePickerControllerDelegate, UIPopoverCon
            let loggedInUser = HTTPCookie.init(properties: userProps),
            let loggedInSig = HTTPCookie.init(properties: sigProps)
         {
-            MBProgressHUD.showAdded(to: self.view, animated: true)
+            let hud = MBProgressHUD.showAdded(to: self.view, animated: true)
             WMAPIManager.sharedManager.checkURLBlocked(url: self.urlTextField.text!, completion: { (isBlocked) in
                 if isBlocked {
                     MBProgressHUD.hide(for: self.view, animated: true)
                     WMGlobal.showAlert(title: "Error", message: "That site's robots.txt policy requests we not archive it.", target: self)
                 } else {
+                    hud.label.text = "Archiving..."
+                    hud.detailsLabel.text = "May take a while."
                     WMAPIManager.sharedManager.request_capture(url: self.urlTextField.text!, logged_in_user: loggedInUser, logged_in_sig: loggedInSig, completion: { (job_id) in
                         if job_id == nil {
                             MBProgressHUD.hide(for: self.view, animated: true)
